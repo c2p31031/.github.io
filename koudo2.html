@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>OpenElevation API Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
 </head>
 <body>
     <h1>OpenElevation API Example</h1>
@@ -10,13 +16,21 @@
     <form id="elevationForm">
         Latitude: <input type="text" id="latitude" placeholder="緯度">
         Longitude: <input type="text" id="longitude" placeholder="経度">
-        <button type="button" onclick="getElevation()">Get Elevation</button>
+        <button type="button" onclick="getElevationAndDisplayOnMap()">Get Elevation</button>
     </form>
     
     <p>Elevation: <span id="elevationValue"></span> メートル</p>
 
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        function getElevation() {
+        const map = L.map('map').setView([0, 0], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const marker = L.marker([0, 0]).addTo(map);
+
+        function getElevationAndDisplayOnMap() {
             const latitude = document.getElementById("latitude").value;
             const longitude = document.getElementById("longitude").value;
             const elevationValue = document.getElementById("elevationValue");
@@ -28,6 +42,10 @@
                         if (data && data.results && data.results.length > 0) {
                             const elevation = data.results[0].elevation;
                             elevationValue.textContent = elevation + " メートル";
+
+                            // Update marker position on the map
+                            marker.setLatLng([latitude, longitude]);
+                            map.setView([latitude, longitude], 13);
                         } else {
                             elevationValue.textContent = "情報が見つかりません";
                         }
