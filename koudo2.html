@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenElevation API Example</title>
+</head>
+<body>
+    <h1>OpenElevation API Example</h1>
+    
+    <p>Enter Latitude and Longitude:</p>
+    <form id="elevationForm">
+        Latitude: <input type="text" id="latitude" placeholder="緯度">
+        Longitude: <input type="text" id="longitude" placeholder="経度">
+        <button type="button" onclick="getElevation()">Get Elevation</button>
+    </form>
+    
+    <p>Elevation: <span id="elevationValue"></span> メートル</p>
+
+    <script>
+        function getElevation() {
+            const latitude = document.getElementById("latitude").value;
+            const longitude = document.getElementById("longitude").value;
+            const elevationValue = document.getElementById("elevationValue");
+
+            if (latitude && longitude) {
+                fetch(`https://api.open-elevation.com/api/v1/lookup?locations=${latitude},${longitude}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.results && data.results.length > 0) {
+                            const elevation = data.results[0].elevation;
+                            elevationValue.textContent = elevation + " メートル";
+                        } else {
+                            elevationValue.textContent = "情報が見つかりません";
+                        }
+                    })
+                    .catch(error => {
+                        elevationValue.textContent = "エラーが発生しました";
+                        console.error(error);
+                    });
+            } else {
+                elevationValue.textContent = "緯度と経度を入力してください";
+            }
+        }
+    </script>
+</body>
+</html>
