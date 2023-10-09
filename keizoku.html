@@ -27,7 +27,6 @@ function test2(position) {
 
     var date = new Date(position.timestamp);
 
-    geo_text += "取得時刻:" + date.toLocaleString() + "\n";
     geo_text += "取得回数:" + (++num) + "\n";
 
     document.getElementById('position_view').innerHTML = geo_text;
