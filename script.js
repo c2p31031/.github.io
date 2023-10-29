@@ -15,6 +15,9 @@ function initMap() {
 
     // 位置情報取得ボタンのクリックイベント
     document.getElementById('getLocation').addEventListener('click', getLocation);
+
+    // 数秒ごとに位置情報を更新
+    setInterval(getLocation, 5000); // 5000 milliseconds = 5 seconds
 }
 
 function getLocation() {
@@ -44,10 +47,12 @@ function getLocation() {
 // Google Maps APIの非同期読み込み
 function loadScript() {
     const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAFcyIINxfRta3BSgR66oUdlS6BPEcnLsA&callback=initMap';
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap'; // Replace YOUR_API_KEY with your actual API key
     script.defer = true;
     document.head.appendChild(script);
 }
 
+// ページ読み込み後にGoogle Maps APIを読み込む
+window.addEventListener('load', loadScript);
 // ページ読み込み後にGoogle Maps APIを読み込む
 window.addEventListener('load', loadScript);
