@@ -47,7 +47,7 @@ function getLocation() {
 // Google Maps APIの非同期読み込み
 function loadScript() {
     const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap'; // Replace YOUR_API_KEY with your actual API key
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAFcyIINxfRta3BSgR66oUdlS6BPEcnLsA&callback=initMap'; // Replace YOUR_API_KEY with your actual API key
     script.defer = true;
     document.head.appendChild(script);
 }
