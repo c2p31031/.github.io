@@ -1,8 +1,8 @@
 {
     "theme_color": "#72f29d",
     "background_color": "#02051f",
-    "short_name": "Celar",
-    "name": "Celar",
+    "short_name": "ココイル",
+    "name": "位置情報共有Webアプリケーション",
     "display": "standalone",
     "orientation": "portrait",
     "start_url": "/",
