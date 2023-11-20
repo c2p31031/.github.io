@@ -89,6 +89,14 @@
                 removeMarker(location);
             });
         }
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // ユーザーが認証されている場合、データベースに書き込む
+                    firebase.database().ref('your-node').push(yourData);
+                } else {
+                    // ユーザーが認証されていない場合の処理
+                }
+            });
 
         // Your map-related JavaScript code here (using Google Maps API)
         function addMarker(location) {
