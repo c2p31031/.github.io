@@ -57,8 +57,8 @@
                 };
 
                 // Save the user's location in the database
-                locationsRef.push(userLocation);
-
+                firebase.database().ref('locations').push(userLocation);
+                
                 // Add a marker for the user's current location
                 var userMarker = new google.maps.Marker({
                     position: userLocation,
