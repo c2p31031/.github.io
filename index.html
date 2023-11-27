@@ -33,29 +33,20 @@
             // マップの生成
             const map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-            // ピンの設定
-            const marker = new google.maps.Marker({
-                position: initialLocation,
-                map: map,
-                title: '初期位置'
-            });
+            // ピンの配列
+            const markers = [];
 
             // マップをクリックした時のイベントリスナー
             google.maps.event.addListener(map, 'click', function(event) {
                 // クリックした場所にピンを設定
-                placeMarker(event.latLng, map);
+                placeMarker(event.latLng, map, markers);
             });
         }
 
         // ピンを設置する関数
-        function placeMarker(location, map) {
-            // 以前のピンがあれば削除
-            if (marker) {
-                marker.setMap(null);
-            }
-
+        function placeMarker(location, map, markers) {
             // 新しいピンを設置
-            marker = new google.maps.Marker({
+            const marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
@@ -69,12 +60,16 @@
             marker.addListener('click', function() {
                 infowindow.open(map, marker);
             });
+
+            // ピンを配列に追加
+            markers.push(marker);
         }
     </script>
 
     <!-- Google Maps APIの読み込み -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFcyIINxfRta3BSgR66oUdlS6BPEcnLsA&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap"></script>
 </body>
 </html>
+
 
 
