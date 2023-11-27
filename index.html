@@ -3,123 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realtime Location Sharing with Google Maps</title>
-    <!-- Firebase JavaScript SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <!-- Google Maps JavaScript API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFcyIINxfRta3BSgR66oUdlS6BPEcnLsA&libraries&libraries=places&callback=initMap"></script>
-
+    <title>Google Maps API Demo</title>
     <style>
         #map {
             height: 400px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Realtime Location Sharing with Google Maps</h1>
-
+    <h1>Google Maps API Demo</h1>
     <div id="map"></div>
 
-    <!-- Your Firebase config -->
     <script>
-        var firebaseConfig = {
-            apiKey: "AIzaSyB68Y_y4DfeuUIFuKbzZc-vXc8szmQyhUA",
-            authDomain: "kokoiru-f0404.firebaseapp.com",
-            databaseURL: "https://kokoiru-f0404-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "kokoiru-f0404",
-            storageBucket: "kokoiru-f0404.appspot.com",
-            messagingSenderId: "341276960063",
-            appId: "1:341276960063:web:1177a1eefce269a6c25f8a"
-        };
+        // Google Maps APIキー（ご自分のAPIキーに置き換えてください）
+        const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Reference to the Firebase database
-        var database = firebase.database();
-
-        // Reference to the 'locations' node in the Firebase database
-        var locationsRef = database.ref('locations');
-
-        // Initialize Google Maps
-        var map;
+        // マップの初期化
         function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 0, lng: 0},
-                zoom: 2
-            });
+            // 初期座標（ここでは東京の座標に設定しています）
+            const initialLocation = { lat: 35.6895, lng: 139.6917 };
 
-            // Get user's location and update it in real-time
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
+            // マップのオプション
+            const mapOptions = {
+                center: initialLocation,
+                zoom: 12
+            };
 
-                // Save the user's location in the database
-                firebase.database().ref('locations').push(userLocation);
-                
-                // Add a marker for the user's current location
-                var userMarker = new google.maps.Marker({
-                    position: userLocation,
-                    map: map,
-                    title: "Your Location"
-                });
+            // マップの生成
+            const map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-                // Center the map on the user's location
-                map.setCenter(userLocation);
-            });
-
-            // Load and display existing locations from Firebase
-            locationsRef.on('child_added', function(snapshot) {
-                var location = snapshot.val();
-                addMarker(location);
-            });
-
-            // Update markers in real-time when location changes
-            locationsRef.on('child_changed', function(snapshot) {
-                var location = snapshot.val();
-                updateMarker(location);
-            });
-
-            // Remove markers when a location is removed from Firebase
-            locationsRef.on('child_removed', function(snapshot) {
-                var location = snapshot.val();
-                removeMarker(location);
-            });
-        }
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    // ユーザーが認証されている場合、データベースに書き込む
-                    firebase.database().ref('your-node').push(yourData);
-                } else {
-                    // ユーザーが認証されていない場合の処理
-                }
-            });
-
-        // Your map-related JavaScript code here (using Google Maps API)
-        function addMarker(location) {
-            var marker = new google.maps.Marker({
-                position: {lat: location.lat, lng: location.lng},
+            // ピンの設定
+            const marker = new google.maps.Marker({
+                position: initialLocation,
                 map: map,
-                title: "Friend's Location"
+                title: '初期位置'
             });
 
-            // Save the marker reference in the location object
-            location.marker = marker;
+            // マップをクリックした時のイベントリスナー
+            google.maps.event.addListener(map, 'click', function(event) {
+                // クリックした場所にピンを設定
+                placeMarker(event.latLng, map);
+            });
         }
 
-        function updateMarker(location) {
-            // Update the position of the existing marker
-            location.marker.setPosition({lat: location.lat, lng: location.lng});
-        }
+        // ピンを設置する関数
+        function placeMarker(location, map) {
+            // 以前のピンがあれば削除
+            if (marker) {
+                marker.setMap(null);
+            }
 
-        function removeMarker(location) {
-            // Remove the marker from the map
-            location.marker.setMap(null);
+            // 新しいピンを設置
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            // ピンの情報ウィンドウ
+            const infowindow = new google.maps.InfoWindow({
+                content: '新しいピンの場所'
+            });
+
+            // ピンをクリックしたときのイベントリスナー
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
         }
     </script>
+
+    <!-- Google Maps APIの読み込み -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap"></script>
 </body>
 </html>
+
 
